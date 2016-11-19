@@ -9,6 +9,7 @@ using Android.App;
 using Android.Content;
 using Android.Content.PM;
 using Android.Graphics;
+using Android.Hardware;
 using Android.OS;
 using Android.Runtime;
 using Android.Views;
@@ -66,6 +67,7 @@ namespace SOA_Android.Activities
                     currentSensorService = new Intent(this, typeof(GPSService));
                     txtSensorValue.LayoutParameters = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MatchParent, LinearLayout.LayoutParams.MatchParent);
                     btnSensorValue.Visibility = ViewStates.Gone;
+                    txtSensorValue.Text = "Esperando información...";
                     break;
                 case "Hora":
                     currentSensorService = new Intent(this, typeof(HourService));
@@ -133,6 +135,11 @@ namespace SOA_Android.Activities
 
                 if (activity.sensorType != "Hora" && reading.Equals("NOTHING"))
                 {
+                    var toast = Toast.MakeText(context, $"Sensor de {activity.sensorType} no disponible",
+                        ToastLength.Long);
+                    var toastView = toast.View;
+                    toastView.SetBackgroundColor(Color.DarkRed);
+                    toast.Show();
                     activity.StartActivity(typeof(MainMenuActivity));
                     activity.StopService(activity.currentSensorService);
                 }

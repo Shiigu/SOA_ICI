@@ -13,6 +13,7 @@ using Android.OS;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
+using SOA_Android.Activities;
 using SOA_Android.Support_Classes;
 
 namespace SOA_Android.Services
@@ -90,6 +91,10 @@ namespace SOA_Android.Services
 
         public void OnProviderDisabled(string provider)
         {
+            var mainIntent = new Intent(this, typeof(MainMenuActivity));
+            mainIntent.AddFlags(ActivityFlags.NewTask);
+            StopSelf();
+            StartActivity(mainIntent);
         }
 
         public void OnProviderEnabled(string provider)

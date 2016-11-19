@@ -150,7 +150,6 @@ namespace SOA_Android.Support_Classes
         {
             var documentsPath = Android.OS.Environment.ExternalStorageDirectory.ToString();
             var filePath = Path.Combine(documentsPath, "SOA-ICI/ColorConfiguration.xml");
-            var xs = new XmlSerializer(typeof(ColorConfiguration));
             if (!File.Exists(filePath))
                 BuildDefaultColorConfiguration();
             using (var sr = new StreamReader(filePath))

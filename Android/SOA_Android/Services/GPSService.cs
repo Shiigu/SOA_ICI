@@ -98,7 +98,7 @@ namespace SOA_Android.Services
         {
             _currentLocation = location;
             if (_currentLocation == null) return;
-            _currentCoordinates = $"{_currentLocation.Latitude:f6},{_currentLocation.Longitude:f6}";
+            _currentCoordinates = $"{_currentLocation.Latitude:f6}|{_currentLocation.Longitude:f6}";
             _sensorDataToSend = new NameValueCollection
             {
                 { "type", "GPS" },
@@ -110,20 +110,20 @@ namespace SOA_Android.Services
 
         public void OnProviderDisabled(string provider)
         {
-            var mainIntent = new Intent(this, typeof(MainMenuActivity));
-            mainIntent.AddFlags(ActivityFlags.NewTask);
+            var i = new Intent();
+            i.SetAction("AndroidReading");
+            i.PutExtra("Value", "NOTHING");
+
+            SendBroadcast(i);
             StopSelf();
-            StartActivity(mainIntent);
         }
 
         public void OnProviderEnabled(string provider)
         {
-            throw new NotImplementedException();
         }
 
         public void OnStatusChanged(string provider, [GeneratedEnum] Availability status, Bundle extras)
         {
-            throw new NotImplementedException();
         }
 
         #endregion

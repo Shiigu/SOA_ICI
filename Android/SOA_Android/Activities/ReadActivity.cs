@@ -30,6 +30,7 @@ namespace SOA_Android.Activities
         public Button btnTempValue, btnHumidValue;
 
         private bool connected = false;
+        private bool justOpened = true;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -87,20 +88,21 @@ namespace SOA_Android.Activities
                 };
 
                 if (reading.Type != "temperature" && reading.Type != "humidity") return;
+                
+                if (reading.Value.IndexOf("%") != -1 || reading.Value.IndexOf("°C") != -1) return;
 
                 var values = reading.Value.Split('|');
 
-                var tempValue = values[0].Substring(0, 5).Replace(',', '.');
-                var humidValue = (values.Length > 1) ? values[1].Substring(0, 5).Replace(',', '.') : "0";
+                var tempValue = ".....";
+                var humidValue = ".....";
 
                 var tempColor = Color.Black;
                 var humidColor = Color.Black;
 
-                if (reading.Value.IndexOf("%") != -1 || reading.Value.IndexOf("°C") != -1) return;
 
                 var activity = ((ReadActivity)context);
 
-                if ((DateTime.Now - reading.SendingDateTime).Seconds <= 60)
+                if ((DateTime.Now - reading.SendingDateTime).TotalSeconds <= 60)
                 {
                     if (!activity.connected)
                     {
@@ -111,6 +113,8 @@ namespace SOA_Android.Activities
                         toastView.SetBackgroundColor(Color.DarkGreen);
                         toast.Show();
                     }
+                    tempValue = values[0].Substring(0, 5).Replace(',', '.');
+                    humidValue = (values.Length > 1) ? values[1].Substring(0, 5).Replace(',', '.') : "0";
                     tempColor =
                                 ColorConversion.GetGradientColor(
                                     double.Parse(tempValue, NumberStyles.Any, CultureInfo.InvariantCulture),
@@ -126,17 +130,17 @@ namespace SOA_Android.Activities
                 }
                 else
                 {
-                    if (activity.connected)
+                    if (activity.connected || activity.justOpened)
                     {
-                        activity.connected = true;
+                        activity.connected = false;
+                        activity.justOpened = false;
                         var toast = Toast.MakeText(context, "No hay dispositivos Arduino sensando",
                             ToastLength.Long);
                         var toastView = toast.View;
                         toastView.SetBackgroundColor(Color.Red);
                         toast.Show();
-                        reading.Value = "?????";
 
-                        humidColor = tempColor = Color.Red;
+                        humidColor = tempColor = Color.Transparent;
                     }
                 }
 

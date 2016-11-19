@@ -6,6 +6,6 @@ namespace SOA_Android.Support_Classes
     {
         public const string DweetPostHttp = "https://dweet.io/dweet/for/soa-ici-android";
         public const string DweetPostColorsHttp = "https://dweet.io/dweet/for/soa-ici-colors";
-        public const string DweetGetHttp = "https://dweet.io/get/latest/dweet/for/soa-ici-arduino";
+        public const string DweetGetHttp = "https://dweet.io/get/latest/dweet/for/soa-ici-sensor";
     }
 }
