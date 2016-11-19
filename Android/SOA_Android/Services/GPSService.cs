@@ -89,6 +89,12 @@ namespace SOA_Android.Services
             InitializeGPS();
         }
 
+        public override void OnDestroy()
+        {
+            _locationManager.RemoveUpdates(this);
+            base.OnDestroy();
+        }
+
         public override IBinder OnBind(Intent intent)
         {
             return null;

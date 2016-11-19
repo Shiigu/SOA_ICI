@@ -72,6 +72,12 @@ namespace SOA_Android.Services
             InitializeProximitySensor();
         }
 
+        public override void OnDestroy()
+        {
+            SensorManager.UnregisterListener(this);
+            base.OnDestroy();
+        }
+
         public override IBinder OnBind(Intent intent)
         {
             return null;
