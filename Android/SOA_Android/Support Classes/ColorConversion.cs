@@ -160,10 +160,6 @@ namespace SOA_Android.Support_Classes
 
         public static void BuildDefaultColorConfiguration()
         {
-            float maxRange = 100;
-            if(ProximitySensorService.ProximitySensor != null)
-                maxRange = (ProximitySensorService.ProximitySensor.MaximumRange < 10) ? ProximitySensorService.ProximitySensor.MaximumRange : 10;
-            DefaultColors.ProximityColor.HighColor.Threshold = maxRange.ToString();
             DefaultColors.SaveToXML();
         }
 
