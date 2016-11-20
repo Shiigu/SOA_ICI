@@ -119,13 +119,13 @@ namespace SOA_Android.Activities
                                 ColorConversion.GetGradientColor(
                                     double.Parse(tempValue, NumberStyles.Any, CultureInfo.InvariantCulture),
                                     activity.colorConfig.TemperatureColor.LowColor,
-                                    activity.colorConfig.TemperatureColor.HighColor, double.Parse(ColorConversion.DefaultColors.TemperatureColor.HighColor.Threshold)).ToAndroidColor();
+                                    activity.colorConfig.TemperatureColor.HighColor).ToAndroidColor();
                     tempValue += "°C";
                     humidColor =
                                 ColorConversion.GetGradientColor(
                                     double.Parse(humidValue, NumberStyles.Any, CultureInfo.InvariantCulture),
                                     activity.colorConfig.HumidityColor.LowColor,
-                                    activity.colorConfig.HumidityColor.HighColor, double.Parse(ColorConversion.DefaultColors.HumidityColor.HighColor.Threshold)).ToAndroidColor();
+                                    activity.colorConfig.HumidityColor.HighColor).ToAndroidColor();
                     humidValue += "%";
                 }
                 else

@@ -1,9 +1,11 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using Android.App;
 using Android.Content;
 using Android.Content.PM;
 using Android.Graphics;
+using Android.Graphics.Drawables;
 using Android.OS;
 using Android.Views;
 using Android.Views.InputMethods;
@@ -19,6 +21,8 @@ namespace SOA_Android.Activities
         private EditText txtLowTemp, txtHighTemp, txtLowHumidity, txtHighHumidity;
 
         private ColorConfiguration colors;
+
+        private Color defaultTextColor = Color.Black;
 
         private InputMethodManager imm;
         
@@ -127,6 +131,13 @@ namespace SOA_Android.Activities
             txtLowHumidity.Text = colors.HumidityColor.LowColor.Threshold;
             txtHighHumidity.Text = colors.HumidityColor.HighColor.Threshold;
 
+            var textBackground = txtLowTemp.Background;
+            if (textBackground is ColorDrawable)
+            {
+                defaultTextColor = (textBackground as ColorDrawable).Color;
+            }
+            
+
             txtLowTemp.FocusChange += UpdateValues;
             txtHighTemp.FocusChange += UpdateValues;
             txtLowHumidity.FocusChange += UpdateValues;
@@ -139,7 +150,7 @@ namespace SOA_Android.Activities
             layout.RequestFocus();
         }
 
-        private void ConfigActivity_Click(object sender, System.EventArgs e)
+        private void ConfigActivity_Click(object sender, EventArgs e)
         {
             imm.HideSoftInputFromWindow(txtLowTemp.WindowToken, 0);
             imm.HideSoftInputFromWindow(txtHighTemp.WindowToken, 0);
@@ -147,8 +158,41 @@ namespace SOA_Android.Activities
             imm.HideSoftInputFromWindow(txtHighHumidity.WindowToken, 0);
         }
 
+        private bool VerifyValues(out List<TextView> badViews)
+        {
+            var lowTemp = int.Parse(txtLowTemp.Text);
+            var highTemp = int.Parse(txtHighTemp.Text);
+            var lowHumid = int.Parse(txtLowHumidity.Text);
+            var highHumid = int.Parse(txtHighHumidity.Text);
+            var verification = lowTemp >= 0 && highTemp >= 0 && lowTemp <= highTemp && lowHumid >= 0 && highHumid >= 0 && lowHumid <= highHumid;
+            badViews = new List<TextView>();
+            if (verification) return true;
+            if (lowTemp < 0 || lowTemp > highTemp)
+                badViews.Add(txtLowTemp);
+            if (highTemp < 0)
+                badViews.Add(txtHighTemp);
+            if (lowHumid < 0 || lowHumid > highHumid)
+                badViews.Add(txtLowHumidity);
+            if (highHumid < 0)
+                badViews.Add(txtHighHumidity);
+            return false;
+        }
+
         public override void OnBackPressed()
         {
+            List<TextView> badViews;
+            if (VerifyValues(out badViews) == false)
+            {
+                foreach (var view in badViews)
+                {
+                    view.SetBackgroundColor(Color.Red);
+                }
+                var toast = Toast.MakeText(this, "Configuración de colores inválida", ToastLength.Long);
+                var toastView = toast.View;
+                toastView.SetBackgroundColor(Color.DarkRed);
+                toast.Show();
+                return;
+            }
             colors = ColorConversion.GetColorSetupFromXML();
             colors.TemperatureColor.LowColor.Threshold = txtLowTemp.Text;
             colors.TemperatureColor.HighColor.Threshold = txtHighTemp.Text;
@@ -177,9 +221,15 @@ namespace SOA_Android.Activities
             colors.SaveToXML();
             btnLowTemp.SetBackgroundColor(newColor);
         }
-
+        
         protected void btnHighTemp_Click(object sender, EventArgs e)
         {
+            List<TextView> emptyView;
+            if (VerifyValues(out emptyView) == false)
+            {
+                btnHighTemp.SetBackgroundColor(Color.Red);
+                return;
+            }
             colors = ColorConversion.GetColorSetupFromXML();
             var newColor = BeginHighColorPickerDialog(colors.TemperatureColor.HighColor,
                 typeof(TemperatureColor));
@@ -190,7 +240,7 @@ namespace SOA_Android.Activities
             colors.SaveToXML();
             btnHighTemp.SetBackgroundColor(newColor);
         }
-
+        
         protected void btnLowHumidity_Click(object sender, EventArgs e)
         {
             colors = ColorConversion.GetColorSetupFromXML();
@@ -203,7 +253,7 @@ namespace SOA_Android.Activities
             colors.SaveToXML();
             btnLowHumidity.SetBackgroundColor(newColor);
         }
-
+        
         protected void btnHighHumidity_Click(object sender, EventArgs e)
         {
             colors = ColorConversion.GetColorSetupFromXML();
@@ -216,7 +266,7 @@ namespace SOA_Android.Activities
             colors.SaveToXML();
             btnHighHumidity.SetBackgroundColor(newColor);
         }
-
+        
         protected void btnLowProximity_Click(object sender, EventArgs e)
         {
             colors = ColorConversion.GetColorSetupFromXML();
@@ -297,12 +347,12 @@ namespace SOA_Android.Activities
         private void UpdateValues(object sender, EventArgs e)
         {
             if (((EditText) sender).IsFocused) return;
-            colors = ColorConversion.GetColorSetupFromXML();
-            colors.TemperatureColor.LowColor.Threshold = txtLowTemp.Text;
-            colors.TemperatureColor.HighColor.Threshold = txtHighTemp.Text;
-            colors.HumidityColor.LowColor.Threshold = txtLowHumidity.Text;
-            colors.HumidityColor.HighColor.Threshold = txtHighHumidity.Text;
-            colors.SaveToXML();
+            List<TextView> emptyView;
+            ((EditText)sender).SetBackgroundColor((VerifyValues(out emptyView) == false) ? Color.Red : defaultTextColor);
+            txtLowTemp.Text = (int.Parse(txtLowTemp.Text)).ToString();
+            txtHighTemp.Text = (int.Parse(txtHighTemp.Text)).ToString();
+            txtLowHumidity.Text = (int.Parse(txtLowHumidity.Text)).ToString();
+            txtHighHumidity.Text = (int.Parse(txtHighHumidity.Text)).ToString();
         }
     }
 }

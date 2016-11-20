@@ -53,7 +53,7 @@ namespace SOA_Android.Activities
         private void OnTimedEvent(object sender, ElapsedEventArgs e)
         {
             var secondsElapsedFromToday = (DateTime.Now - DateTime.Today).TotalSeconds;
-            btnHourColor.SetBackgroundColor(ColorConversion.GetGradientColor(secondsElapsedFromToday, colors.HourColor.LowColor, colors.HourColor.HighColor, double.Parse(ColorConversion.DefaultColors.HourColor.HighColor.Threshold)).ToAndroidColor());
+            btnHourColor.SetBackgroundColor(ColorConversion.GetGradientColor(secondsElapsedFromToday, colors.HourColor.LowColor, colors.HourColor.HighColor).ToAndroidColor());
         }
 
         protected void btnRead_Click(object sender, EventArgs e)

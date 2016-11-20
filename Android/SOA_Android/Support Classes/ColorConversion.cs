@@ -230,7 +230,7 @@ namespace SOA_Android.Support_Classes
             };
         }
 
-        public static Color GetGradientColor(double currentValue, LowColor lowerColor, HighColor higherColor, double defaultThreshold)
+        public static Color GetGradientColor(double currentValue, LowColor lowerColor, HighColor higherColor)
         {
             try
             {
@@ -241,7 +241,7 @@ namespace SOA_Android.Support_Classes
                     value = double.Parse(lowerColor.Threshold);
                 else if (currentValue > double.Parse(higherColor.Threshold))
                     value = double.Parse(higherColor.Threshold);
-                value = value*100/defaultThreshold/100;
+                value = value*100/(double.Parse(lowerColor.Threshold) + double.Parse(higherColor.Threshold))/ 100;
                 var gradient = new Hsv
                 {
                     H = lowColor.H + (value*(highColor.H - lowColor.H)),
@@ -254,7 +254,7 @@ namespace SOA_Android.Support_Classes
             catch
             {
                 GetColorSetupFromXML().SaveToXML();
-                return GetGradientColor(currentValue, lowerColor, higherColor, defaultThreshold);
+                return GetGradientColor(currentValue, lowerColor, higherColor);
             }
         }
     }

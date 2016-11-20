@@ -155,7 +155,7 @@ namespace SOA_Android.Activities
                                 ColorConversion.GetGradientColor(
                                     double.Parse(reading, NumberStyles.Any, CultureInfo.InvariantCulture),
                                     activity.colorConfig.ProximityColor.LowColor,
-                                    activity.colorConfig.ProximityColor.HighColor, double.Parse(ColorConversion.DefaultColors.ProximityColor.HighColor.Threshold)).ToAndroidColor();
+                                    activity.colorConfig.ProximityColor.HighColor).ToAndroidColor();
                         activity.btnSensorValue.SetBackgroundColor(color);
                         break;
                     case "GPS":
@@ -170,7 +170,7 @@ namespace SOA_Android.Activities
                                 ColorConversion.GetGradientColor(
                                     secondsInDay,
                                     activity.colorConfig.HourColor.LowColor,
-                                    activity.colorConfig.HourColor.HighColor, double.Parse(ColorConversion.DefaultColors.HourColor.HighColor.Threshold)).ToAndroidColor();
+                                    activity.colorConfig.HourColor.HighColor).ToAndroidColor();
                         activity.btnSensorValue.SetBackgroundColor(color);
                         reading = DateTime.Now.ToString("HH:mm:ss");
                         break;
