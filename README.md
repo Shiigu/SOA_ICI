@@ -18,6 +18,6 @@ Esta aplicación necesita que las siguientes bibliotecas sean instaladas:
 *https://github.com/arduino-libraries/NTPClient
 
 ###Biblioteca para el control de display LCD
-https://github.com/marcoschwartz/LiquidCrystal_I2C
+*https://github.com/marcoschwartz/LiquidCrystal_I2C
 
 *Ademas se necesita que se instale en 'Arduino Software IDE' las 'tarjetas' esp8266 (Herramientas->Placa->Gestor de tarjetas->esp8266)
